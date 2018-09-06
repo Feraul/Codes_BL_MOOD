@@ -117,11 +117,11 @@ if any(pointbndedg)
     
         %Evaluate the ENTROPY condition (flux)
         %Get the entropy flux (left value)
-         entrvar = getineqentropy(Sleft,5,2,1);
+        % entrvar = getineqentropy(Sleft,5,2,1);
          %Calculate the entropy flux (right value)
-         entrflux = entrvar*dotvn;
+        % entrflux = entrvar*dotvn;
          %Obtain the contribution of interface over element to LEFT
-         entrineqterm(leftelem) = entrineqterm(leftelem) + entrflux;
+       %  entrineqterm(leftelem) = entrineqterm(leftelem) + entrflux;
     end  %End of FOR (Swept "bedge")
 end  %End of IF (Does evaluate the boundary edges?)
 
@@ -244,42 +244,42 @@ for i = 1:length(pointinedg)
     
     %Define "charvel" (characteristic velocity):
     %Define "charvel" on the left
-   charvel_left = dotvn*dfwdS_analeft;
+%   charvel_left = dotvn*dfwdS_analeft;
     %Define "charvel" on the right
-   charvel_right = dotvn*dfwdS_analright;
+%   charvel_right = dotvn*dfwdS_analright;
  
     %Discrete:
      %Discrete:
     %"fw" has three values: fw(Sleft) is fw(1), fw(Sright) is fw(3) 
-    [fwaux,fo,gama,] = twophasevar([Sleft Smid Sright],numcase);
+%    [fwaux,fo,gama,] = twophasevar([Sleft Smid Sright],numcase);
     %"fw" has three values: fw(Sleft) is fw(1), fw(Sright) is fw(3) 
-    [dfwdS_discleft,~] = calcdfunctiondS([fwaux(1) fwaux(2)],[gama(1) gama(2)],[Sleft Smid],0);
-    [dfwdS_discright,~] = calcdfunctiondS([fwaux(2) fwaux(3)],[gama(2) gama(3)],[Smid Sright],0); 
+%    [dfwdS_discleft,~] = calcdfunctiondS([fwaux(1) fwaux(2)],[gama(1) gama(2)],[Sleft Smid],0);
+%    [dfwdS_discright,~] = calcdfunctiondS([fwaux(2) fwaux(3)],[gama(2) gama(3)],[Smid Sright],0); 
 %     %Define "numcharvel" (numerical characteristic velocity):
 %     %Define "charvel" on the left
-    numcharvel_left = dotvn*dfwdS_discleft;
+%    numcharvel_left = dotvn*dfwdS_discleft;
 %     %Define "charvel" on the right
-     numcharvel_right = dotvn*dfwdS_discright;
+%     numcharvel_right = dotvn*dfwdS_discright;
     %Define the Rankine-Hugoniout velocity
     charvel_rh = dotvn*dfwdS_rh + dotvg*dgamadS_rh;
     
     %MOOD is turned ON
-    if strcmp(limiterflag{8},'on')
-         %Verify the entropy condition for the left and right states:
-         %"entropycond" == "0", MOOD acts (get the order down);
-         %"entropycond" == "1", MOOD remains with higher order;
-         entropycond = (numcharvel_left*(sign2der_left) >= charvel_rh && ...
-             charvel_rh >= numcharvel_right*(sign2der_right));
-         %Verify NON physical condition:
-         booleanpad = (Sleft < 0 || Sright < 0 || Sleft > 1 || Sright > 1);
-         entropycond = (1 - booleanpad)*entropycond*(entropycond == 1);
-     end  %End of IF (is the MOOD turned ON?)
+%     if strcmp(limiterflag{8},'on')
+%          %Verify the entropy condition for the left and right states:
+%          %"entropycond" == "0", MOOD acts (get the order down);
+%          %"entropycond" == "1", MOOD remains with higher order;
+%          entropycond = (numcharvel_left*(sign2der_left) >= charvel_rh && ...
+%              charvel_rh >= numcharvel_right*(sign2der_right));
+%          %Verify NON physical condition:
+%          booleanpad = (Sleft < 0 || Sright < 0 || Sleft > 1 || Sright > 1);
+%          entropycond = (1 - booleanpad)*entropycond*(entropycond == 1);
+%      end  %End of IF (is the MOOD turned ON?)
     
     %----------------------------------------------------------------------
     %Choise according second derivative sign (see Serma, 2009)
 
     %It use Upwind (Roe)
-   %  if sign2der_left*sign2der_right >= 0 && signder_left*signder_right >= 0
+     if sign2der_left*sign2der_right >= 0 && signder_left*signder_right >= 0
         %Verify the sign of the characteristic velocity:
         %It uses the saturation on the left
         if charvel_rh >= 0
@@ -290,9 +290,9 @@ for i = 1:length(pointinedg)
             
             %Entropy:
             %Get "entrvar":
-             entrvar = getineqentropy(Sleft,5,2,(1 - entropycond)*paramk);
+          %   entrvar = getineqentropy(Sleft,5,2,(1 - entropycond)*paramk);
              %Calculate the entropy flux (left value)
-             entrflux = entrvar*dotvn;
+          %   entrflux = entrvar*dotvn;
         %It uses the saturation on the right
         else 
             %Calculate the numerical flux through interface
@@ -302,40 +302,40 @@ for i = 1:length(pointinedg)
 
             %Entropy:
             %Get "entrvar":
-             entrvar = getineqentropy(Sright,5,2,(1 - entropycond)*paramk);
+       %      entrvar = getineqentropy(Sright,5,2,(1 - entropycond)*paramk);
              %Calculate the entropy flux (right value)
-             entrflux = entrvar*dotvn;
+       %      entrflux = entrvar*dotvn;
         end  %End of IF (Upwind flux)
         
     %It uses the LLF to define the saturation through edge.
-%      else
-%          %Get the max value of characteristic velocity
-%          %Define a range for the saturtion
-%          Sranglr = [Sleft Sright];
-% 
-%          %Get the analitical derivative:
-%          [dfwdS,dgamadS] = calcdfunctiondS(0,0,Sranglr,1);
-%          
-%          %Finally, get the maximun value of saturation:
-%          alfamax = max(abs(dfwdS*dotvn + dgamadS*dotvg));
-%          %Denine the numerical flux
-%          Fleft = fw(1)*dotvn + gama(1)*dotvg;
-%          Fright = fw(3)*dotvn + gama(3)*dotvg;
-%          
-%          %Define Local Lax-Friedrichs Flux
-%          LLFlux = 0.5*((Fleft + Fright) - alfamax*(Sright - Sleft));
-%          
-%          %Calculate the numerical flux through interface using LLF.
-%          numflux = LLFlux;
-%  
-%          earlysw(bedgesize + inedg) = 0.5*(Sleft + Sright);
-%  
-%          %Entropy:
-%          %Get "entrvar":
-%          entrvar = getineqentropy(0.5*(Sleft + Sright),5,2,(1 - entropycond)*paramk);
-%          %Calculate the entropy flux (right value)
-%          entrflux = entrvar*dotvn;
-%      end  %End of IF (type of flux)
+     else
+         %Get the max value of characteristic velocity
+         %Define a range for the saturtion
+         Sranglr = [Sleft Sright];
+
+         %Get the analitical derivative:
+         [dfwdS,dgamadS] = calcdfunctiondS(0,0,Sranglr,1);
+         
+         %Finally, get the maximun value of saturation:
+         alfamax = max(abs(dfwdS*dotvn + dgamadS*dotvg));
+         %Denine the numerical flux
+         Fleft = fw(1)*dotvn + gama(1)*dotvg;
+         Fright = fw(3)*dotvn + gama(3)*dotvg;
+         
+         %Define Local Lax-Friedrichs Flux
+         LLFlux = 0.5*((Fleft + Fright) - alfamax*(Sright - Sleft));
+         
+         %Calculate the numerical flux through interface using LLF.
+         numflux = LLFlux;
+ 
+         earlysw(bedgesize + inedg) = 0.5*(Sleft + Sright);
+ 
+         %Entropy:
+         %Get "entrvar":
+   %      entrvar = getineqentropy(0.5*(Sleft + Sright),5,2,(1 - entropycond)*paramk);
+         %Calculate the entropy flux (right value)
+   %      entrflux = entrvar*dotvn;
+     end  %End of IF (type of flux)
     
     %Obtain the contribution of interface over element to LEFT
     advecterm(leftelem) = advecterm(leftelem) + numflux;
@@ -344,10 +344,10 @@ for i = 1:length(pointinedg)
     
     %Evaluate ENTROPY condition (flux terms)
     %Obtain the contribution of interface over element to LEFT
-     entrineqterm(leftelem) = ...
-         entrineqterm(leftelem) + entrflux;   %max(0,sign(dotvn))*(1 - entropycond)*(orderinedgdist(i,1) > 1);  %
+ %    entrineqterm(leftelem) = ...
+ %        entrineqterm(leftelem) + entrflux;   %max(0,sign(dotvn))*(1 - entropycond)*(orderinedgdist(i,1) > 1);  %
      %Obtain the contribution of interface over element to RIGHT
-     entrineqterm(rightelem) = ...
-         entrineqterm(rightelem) - entrflux;   %min(0,sign(dotvn))*(1 - entropycond)*(orderinedgdist(i,2) > 1);  %
+ %    entrineqterm(rightelem) = ...
+ %        entrineqterm(rightelem) - entrflux;   %min(0,sign(dotvn))*(1 - entropycond)*(orderinedgdist(i,2) > 1);  %
 end  %End of FOR ("inedge")
 

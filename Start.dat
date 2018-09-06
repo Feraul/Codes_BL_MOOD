@@ -25,7 +25,7 @@ y
 //***OBS.: Even if you chose [n], write below both the path and 
 //folder's name where you want to store your results:
 
-C:\Users\fernando\Desktop\Codes_BL_MOOD\Benchmark_Cases\BenchTwophase1_1
+C:\Users\fernando\Documents\GitHub\Benchmark_Cases\BenchTwophase1_1
 
 //Write below either a number or any other key word to feature the 
 //folder where the results will be stored:
@@ -269,7 +269,7 @@ y
 //[1] ==> "Minimum order value between those sharing the face"; 
 //[2] ==> "Minimum order value among those ones suronding the CV".
 
-2
+1
 
 //--------------------------------------------------------------------
 //------------------- Geometry and Mesh Properties -------------------
@@ -289,7 +289,7 @@ No title
 
 //If [n], write below the path where the geometry file is:  
 
-C:\Users\fernando\Desktop\Codes_BL_MOOD\Benchmark_GeometryFiles
+C:\Users\fernando\Documents\GitHub\Benchmark_GeometryFiles
 
 //Write below the name of the geometry file. Use the extension *.geo.
 
@@ -327,7 +327,7 @@ y
 //and two geometric tag)
 
 1
-256 1 1 3
+16 1 1 3
 
 //Direction "y" (number of statments, number of points, growth rate 
 //and two geometric tag)
