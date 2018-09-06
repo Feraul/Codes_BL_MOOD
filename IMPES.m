@@ -33,7 +33,7 @@ function IMPES(Sw,injecelem,producelem,satinbound,wells,klb,satonvertices,...
     rtmd_storeright,isonbound,elemsize,bedgesize,inedgesize)
 %Define global parameters:
 global timew elemarea totaltime timelevel pormap numcase pmethod smethod ...
-    filepath benchkey;
+    filepath benchkey centelem;
 
 %--------------------------------------------------------------------------
 %Initialize parameters:
