@@ -211,7 +211,7 @@ tse
 
 //Is there an Edge-based Limiter? [y] ==> "yes"; [n] ==> "no".
 
-y
+n
 
 //If [y], choose among the Edge-Based limiters below:
 //[mm] ==> "MinMod";
@@ -229,7 +229,7 @@ va2
 //Write below the type of Gradient Interpolation (Blasek, 2001):
 //[-1] ==> "Higher Order Upwind"; [0] ==> "Centered Scheme".
 
-0.33333
+-1
 
 //--------------------
 //Patch-based Limiter:
@@ -243,7 +243,7 @@ y
 //[mlp] ==> "Multidimensional Limiting Process";
 //[mlp_vk] ==> "MLP, type Venkathakrishnen (see Park and Kim, 2012).
 
-wf
+mlp
 
 //If you chose [wf], write below the additional parameter ("delta"):
 
@@ -262,7 +262,7 @@ n
 
 //Do you want to turn the MOOD on? [y] ==> "yes"; [n] ==> "no".
 
-n
+y
 
 //If [y], write below the type of the MOOD strategy (see Clain et 
 //al., 2012): 
@@ -327,7 +327,7 @@ y
 //and two geometric tag)
 
 1
-16 1 1 3
+128 1 1 3
 
 //Direction "y" (number of statments, number of points, growth rate 
 //and two geometric tag)

@@ -275,6 +275,7 @@ else
         gradslimited = 0.5*((1 - k)*gradupwd + (1 + k)*gradcent);
         
          swonedge = Sw(elemeval(1)) + 0.5*gradslimited;
+         
         else
          swonedge = Sw(elemeval(1));  
         end
