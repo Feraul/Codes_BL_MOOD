@@ -36,10 +36,9 @@ if order == 1
 %Higher-Order Schemes (Second Order).
 elseif order == 2
     %Calculate the second-order saturation value.
-    swonedge = get2ndorder(elemeval,vertices,verticescoord,...
-        taylorterms(:,1:2),Sw,limiterflag,flagknownvert,satonvertices,...
-        mlpbyelem,centelemeval);
-
+     swonedge = get2ndorder(elemeval,vertices,verticescoord,...
+         taylorterms(:,1:2),Sw,limiterflag,flagknownvert,satonvertices,...
+         mlpbyelem,centelemeval);
 %Very Higher-Order Schemes (Third and Fourth Order)
 elseif order == 3 || order == 4
     %Define "columns" according to "order"

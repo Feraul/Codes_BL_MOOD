@@ -125,8 +125,8 @@ while stopcriteria < 100
     %explicit saturation formulation.
     
      %dt = calctimestep(flowrate,Fg,Sw,satinbound,injecelem,klb)    
-     dt = calctimestep_aux(flowrate,Fg,Sw,satinbound,injecelem,klb)
-     
+     %dt = calctimestep_aux(flowrate,Fg,Sw,satinbound,injecelem,klb)
+     dt = calctimestep_aux2(flowrate,Fg,Sw,satinbound,injecelem)
      %Verify if the "dt" is the last one
      domainvol = sum(elemarea);
      %Get the total flowrate

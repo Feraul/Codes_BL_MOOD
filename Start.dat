@@ -25,7 +25,7 @@ y
 //***OBS.: Even if you chose [n], write below both the path and 
 //folder's name where you want to store your results:
 
-C:\Users\flc59_000\Documents\GitHub\Benchmark_Cases\BenchTwophase1_1
+C:\Users\fernando\Documents\GitHub\Benchmark_Cases\BenchTwophase1_1
 
 //Write below either a number or any other key word to feature the 
 //folder where the results will be stored:
@@ -211,7 +211,7 @@ tse
 
 //Is there an Edge-based Limiter? [y] ==> "yes"; [n] ==> "no".
 
-y
+n
 
 //If [y], choose among the Edge-Based limiters below:
 //[mm] ==> "MinMod";
@@ -229,7 +229,7 @@ va2
 //Write below the type of Gradient Interpolation (Blasek, 2001):
 //[-1] ==> "Higher Order Upwind"; [0] ==> "Centered Scheme".
 
-0.33333
+-1
 
 //--------------------
 //Patch-based Limiter:
@@ -243,7 +243,7 @@ y
 //[mlp] ==> "Multidimensional Limiting Process";
 //[mlp_vk] ==> "MLP, type Venkathakrishnen (see Park and Kim, 2012).
 
-wf
+mlp
 
 //If you chose [wf], write below the additional parameter ("delta"):
 
@@ -262,14 +262,14 @@ n
 
 //Do you want to turn the MOOD on? [y] ==> "yes"; [n] ==> "no".
 
-n
+y
 
 //If [y], write below the type of the MOOD strategy (see Clain et 
 //al., 2012): 
 //[1] ==> "Minimum order value between those sharing the face"; 
 //[2] ==> "Minimum order value among those ones suronding the CV".
 
-1
+2
 
 //--------------------------------------------------------------------
 //------------------- Geometry and Mesh Properties -------------------
@@ -289,7 +289,7 @@ No title
 
 //If [n], write below the path where the geometry file is:  
 
-C:\Users\flc59_000\Documents\GitHub\Benchmark_GeometryFiles
+C:\Users\fernando\Documents\GitHub\Benchmark_GeometryFiles
 
 //Write below the name of the geometry file. Use the extension *.geo.
 
@@ -327,7 +327,7 @@ y
 //and two geometric tag)
 
 1
-16 1 1 3
+128 1 1 3
 
 //Direction "y" (number of statments, number of points, growth rate 
 //and two geometric tag)
@@ -612,7 +612,7 @@ n
 //The Courant number will be used as a stability parameter of the 
 //hyperbolic saturation equation. Write below the Courant number:
 
-0.5
+0.6
 
 //--------------------------------------------------------------------
 //Unity for Time (only for Two-Phase Simulation): 
