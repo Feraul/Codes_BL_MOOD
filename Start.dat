@@ -269,7 +269,7 @@ y
 //[1] ==> "Minimum order value between those sharing the face"; 
 //[2] ==> "Minimum order value among those ones suronding the CV".
 
-2
+1
 
 //--------------------------------------------------------------------
 //------------------- Geometry and Mesh Properties -------------------

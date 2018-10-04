@@ -91,7 +91,8 @@ if any(pointbndedg)
             %Get the saturation value recovered
             Sleft = getsatonedge(elemeval,vertices,verticescoord,...
                 taylorterms,Sw,limiterflag,faceorder,constraint,flagknownvert,...
-                satonvertices,mlpbyelem,centelem(leftelem,1:2));          
+                satonvertices,mlpbyelem,centelem(leftelem,1:2));
+            
 %             satdiff = 0;
         end  %End of IF
 
@@ -188,9 +189,12 @@ for i = 1:length(pointinedg)
         mlpbyelem,centelem(elemeval,1:2));
 
     %Get an accurated value:
-    if Sleft>1 || Sright>1
-        
-       pause
+    if Sleft>1 
+        Sleft=1;
+       
+    end
+    if Sright>1 
+        Sright=1;
     end
     Sleft = Sleft*(abs(Sleft) > tol);
     Sright = Sright*(abs(Sright) > tol);
@@ -214,10 +218,39 @@ for i = 1:length(pointinedg)
     %Discrete:
     %"fw" has three values: fw(Sleft) is fw(1), fw(Sright) is fw(3) 
     [fw,~,gama,] = twophasevar([Sleft Smid Sright],numcase);
-
+    % fw(1) ---> fluxo fracional no elemento fw(Sleft)
+    % fw(2) ---> fluxo fracional no elemento fw(Smid) 
+    % fw(3) ---> fluxo fracional no elemento fw(Sright)
+     
     %Calculate the Rankine-Hugoniot ratio:
+    % veja o tese Darlan pag. 165
     [dfwdS_rh,dgamadS_rh] = ...
         calcdfunctiondS([fw(1) fw(3)],[gama(1) gama(3)],[Sleft Sright],0);
+    %%
+    %There saturation difference bigger than zero
+    if (Sleft - Smid) ~= 0
+        dfdSlef = (fw(2) - fw(1))/( Smid-Sleft);
+    
+        %The saturation difference is zeros
+    else
+        dfdSlef = 0;
+        
+    end  %End of IF
+    if (Smid-Sright) ~= 0
+        dfdSrel= (fw(2) - fw(2))/(Sright-Smid);
+        
+        %The saturation difference is zeros
+    else
+        dfdSrel = 0;
+        
+    end  %End of IF
+    if (dfdSlef < dfwdS_rh ||dfdSlef == dfwdS_rh)  && (dfwdS_rh<dfdSrel|| dfwdS_rh==dfdSrel ) 
+    else
+        i
+        disp('Não satisfaz condição de Rankine Hugoniot')
+        
+    end
+    %%
     %Get accuracy (RH ratio):
     dfwdS_rh = dfwdS_rh*(abs(dfwdS_rh) > tol);
     
@@ -312,7 +345,7 @@ for i = 1:length(pointinedg)
         end  %End of IF (Upwind flux)
         
     %It uses the LLF to define the saturation through edge.
-     else
+      else
          %Get the max value of characteristic velocity
          %Define a range for the saturtion
          Sranglr = [Sleft Sright];
@@ -339,7 +372,7 @@ for i = 1:length(pointinedg)
    %      entrvar = getineqentropy(0.5*(Sleft + Sright),5,2,(1 - entropycond)*paramk);
          %Calculate the entropy flux (right value)
    %      entrflux = entrvar*dotvn;
-     end  %End of IF (type of flux)
+      end  %End of IF (type of flux)
     
     %Obtain the contribution of interface over element to LEFT
     advecterm(leftelem) = advecterm(leftelem) + numflux;

@@ -188,6 +188,12 @@ Sright = getsatonedge_aux(elemeval,vertices,verticescoord,taylorterms,Sw,...
     %Get an accurated value:
     Sleft = Sleft*(abs(Sleft) > tol);
     Sright = Sright*(abs(Sright) > tol);
+     if Sleft>1
+        Sleft=1; 
+     end
+     if Sright>1
+       Sright=1;
+     end
 %     if Sleft<0
 %        Sleft=Sw(leftelem); 
 %     end
@@ -269,7 +275,7 @@ Sright = getsatonedge_aux(elemeval,vertices,verticescoord,taylorterms,Sw,...
     %Choise according second derivative sign (see Serma, 2009)
 
     %It use Upwind (Roe)
-    if sign2der_left*sign2der_right >= 0 && signder_left*signder_right >= 0
+%    if sign2der_left*sign2der_right >= 0 && signder_left*signder_right >= 0
         %Verify the sign of the characteristic velocity:
         %It uses the saturation on the left
         if charvel_rh >= 0
@@ -298,33 +304,33 @@ Sright = getsatonedge_aux(elemeval,vertices,verticescoord,taylorterms,Sw,...
         end  %End of IF (Upwind flux)
         
     %It uses the LLF to define the saturation through edge.
-    else
-        %Get the max value of characteristic velocity
-        %Define a range for the saturtion
-        Sranglr = linspace(min(Sleft,Sright),max(Sleft,Sright),10);
-        %Get the analitical derivative:
-        [dfwdS,dgamadS] = calcdfunctiondS(0,0,Sranglr,1);
-        
-        %Finally, get the maximun value of saturation:
-        alfamax = max(abs(dfwdS*dotvn + dgamadS*dotvg));
-        %Denine the numerical flux
-        Fleft = fw(1)*dotvn + gama(1)*dotvg;
-        Fright = fw(3)*dotvn + gama(3)*dotvg;
-        
-        %Define Local Lax-Friedrichs Flux
-        LLFlux = 0.5*((Fleft + Fright) - alfamax*(Sright - Sleft));
-        
-        %Calculate the numerical flux through interface using LLF.
-        numflux = LLFlux;
-
-        earlysw(bedgesize + inedg) = 0.5*(Sleft + Sright);
-
-        %Entropy:
-        %Get "entrvar":
-%         entrvar = getineqentropy(0.5*(Sleft + Sright),2,2,(1 - entropycond)*paramk);
-%         %Calculate the entropy flux (right value)
-%         entrflux = entrvar*dotvn;
-    end  %End of IF (type of flux)
+%     else
+%         %Get the max value of characteristic velocity
+%         %Define a range for the saturtion
+%         Sranglr = linspace(min(Sleft,Sright),max(Sleft,Sright),10);
+%         %Get the analitical derivative:
+%         [dfwdS,dgamadS] = calcdfunctiondS(0,0,Sranglr,1);
+%         
+%         %Finally, get the maximun value of saturation:
+%         alfamax = max(abs(dfwdS*dotvn + dgamadS*dotvg));
+%         %Denine the numerical flux
+%         Fleft = fw(1)*dotvn + gama(1)*dotvg;
+%         Fright = fw(3)*dotvn + gama(3)*dotvg;
+%         
+%         %Define Local Lax-Friedrichs Flux
+%         LLFlux = 0.5*((Fleft + Fright) - alfamax*(Sright - Sleft));
+%         
+%         %Calculate the numerical flux through interface using LLF.
+%         numflux = LLFlux;
+% 
+%         earlysw(bedgesize + inedg) = 0.5*(Sleft + Sright);
+% 
+%         %Entropy:
+%         %Get "entrvar":
+% %         entrvar = getineqentropy(0.5*(Sleft + Sright),2,2,(1 - entropycond)*paramk);
+% %         %Calculate the entropy flux (right value)
+% %         entrflux = entrvar*dotvn;
+%     end  %End of IF (type of flux)
     
     %Obtain the contribution of interface over element to LEFT
     advecterm(leftelem) = advecterm(leftelem) + numflux;

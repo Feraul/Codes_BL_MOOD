@@ -25,7 +25,7 @@
 function [dt] = calctimestep_aux2(flowrate,Fg,Sw,satinbound,injecelem)
 %Define global parameters:
 global pormap elemarea courant order inedge bedge normals bcflag numcase ...
-    smethod;
+    smethod visc satlimit;
 
 %Define the degree of the reconstruction polynomium "n"
 n = order - 1;
@@ -70,9 +70,13 @@ for i = 1:inedgesize
     %There is no gravity effects
     else
         %Calculate the derivative of functions "fw" and "gama"
-        [dfwdS,] = ...
-            calcdfunctiondS(fw,gama,[Sw(inedge(i,3)) Sw(inedge(i,4))],0);
-
+       % [dfwdS,] = ...
+       %     calcdfunctiondS(fw,gama,[Sw(inedge(i,3)) Sw(inedge(i,4))],1);
+       SW= (Sw(inedge(i,3))+ Sw(inedge(i,4)))/2;
+       miw = visc(1);
+       mio = visc(2);
+       dfwdS = (2*(SW^3)*(2 - 3*SW + (SW^3))*miw*mio)/...
+                    (((SW^4)*mio - ((SW - 1)^3)*(SW + 1)*miw)^2);
         %Calculate "dt" by edge (inedge)
         dtbyedge(i) = ...
             abs((courant/((2*n) + 1))*pormap*vol/(dfwdS*flowrate(bedgesize ...
