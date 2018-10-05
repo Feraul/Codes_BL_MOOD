@@ -33,7 +33,8 @@ format long;
 tic
 % profile on -history;
 
-Modificando el codigo
+% Modificando el codigo
+ya ententidimos eso
 %--------------------------------------------------------------------------
 %Define the global variables:
 global coord centelem elem esurn1 esurn2 nsurn1 nsurn2 bedge inedge ...
