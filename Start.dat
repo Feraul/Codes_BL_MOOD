@@ -25,7 +25,7 @@ y
 //***OBS.: Even if you chose [n], write below both the path and 
 //folder's name where you want to store your results:
 
-C:\Users\flc59_000\Documents\GitHub\Benchmark_Cases\BenchTwophase1_1
+C:\Users\fernando\Documents\GitHub\Benchmark_Cases\BenchTwophase1_1
 
 //Write below either a number or any other key word to feature the 
 //folder where the results will be stored:
@@ -289,7 +289,7 @@ No title
 
 //If [n], write below the path where the geometry file is:  
 
-C:\Users\flc59_000\Documents\GitHub\Benchmark_GeometryFiles
+C:\Users\fernando\Documents\GitHub\Benchmark_GeometryFiles
 
 //Write below the name of the geometry file. Use the extension *.geo.
 
@@ -612,7 +612,11 @@ n
 //The Courant number will be used as a stability parameter of the 
 //hyperbolic saturation equation. Write below the Courant number:
 
+<<<<<<< HEAD
 0.05
+=======
+0.6
+>>>>>>> 3227a21bb369870037b283ec48a7b93db9ccea7c
 
 //--------------------------------------------------------------------
 //Unity for Time (only for Two-Phase Simulation): 
