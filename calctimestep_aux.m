@@ -114,8 +114,8 @@ if any(klb)
     diffsat = diffsat.*(abs(diffsat) > tol);
     pointnozero = diffsat ~= 0;
     %Fill "dfwdS"
-    dfwdS(pointnozero) = diff_fw(pointnozero)./diffsat(pointnozero); 
-
+    dfwdS(pointnozero) = diff_fw(pointnozero)./diffsat(pointnozero);
+    
     %Define delta t:
     %Chose according physical effects (gravity existence etc)
     %There is gravity effects
