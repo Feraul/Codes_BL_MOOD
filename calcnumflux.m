@@ -348,11 +348,8 @@ for i = 1:length(pointinedg)
         end  %End of IF (Upwind flux)
         
     %It uses the LLF to define the saturation through edge.
-<<<<<<< HEAD
-     else
-=======
+
       else
->>>>>>> 3227a21bb369870037b283ec48a7b93db9ccea7c
          %Get the max value of characteristic velocity
          %Define a range for the saturtion
          Sranglr = [Sleft Sright];
@@ -379,11 +376,8 @@ for i = 1:length(pointinedg)
    %      entrvar = getineqentropy(0.5*(Sleft + Sright),5,2,(1 - entropycond)*paramk);
          %Calculate the entropy flux (right value)
    %      entrflux = entrvar*dotvn;
-<<<<<<< HEAD
-     end  %End of IF (type of flux)
-=======
+
       end  %End of IF (type of flux)
->>>>>>> 3227a21bb369870037b283ec48a7b93db9ccea7c
     
     %Obtain the contribution of interface over element to LEFT
     advecterm(leftelem) = advecterm(leftelem) + numflux;

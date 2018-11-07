@@ -63,13 +63,10 @@ if numcase >= 31 && numcase < 31.6
     plot (x,Swanal,'LineWidth',2)
     %Plot the results (Actual Numerical Solution)
     hold on;
-<<<<<<< HEAD
     plot(posit,satfield,'-yo');
-=======
 
     plot(posit,satfield,'-b*');
     plot(posit,satfield,'-ro');
->>>>>>> 3227a21bb369870037b283ec48a7b93db9ccea7c
     hold on;
 
     grid on;
