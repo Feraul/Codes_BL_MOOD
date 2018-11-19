@@ -269,7 +269,7 @@ y
 //[1] ==> "Minimum order value between those sharing the face"; 
 //[2] ==> "Minimum order value among those ones suronding the CV".
 
-1
+2
 
 //--------------------------------------------------------------------
 //------------------- Geometry and Mesh Properties -------------------
@@ -327,13 +327,13 @@ y
 //and two geometric tag)
 
 1
-256 1 1 3
+64 1 1 3
 
 //Direction "y" (number of statments, number of points, growth rate 
 //and two geometric tag)
 
 1
-1 1 2 4
+2 1 2 4
 
 //------------------
 //UNSTRUCTURED MESH:
