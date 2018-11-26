@@ -97,15 +97,15 @@ if any(pointbndedg)
                 taylorterms,Sw,limiterflag,faceorder,constraint,flagknownvert,...
                 satonvertices,mlpbyelem,centelem(leftelem,1:2));
             
-             %======================================================================
-    limiterflagaux=limiterflag;
-    limiterflagaux{1}='on';
-    limiterflagaux{4}='wf';
-    limiterflagaux{7}=0.33333;
-    %======================================================================
-    Sleftaux = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
-        limiterflagaux,faceorder,constraint,flagknownvert,satonvertices,...
-        mlpbyelem,centelem(elemeval,1:2));
+            %======================================================================
+            limiterflagaux=limiterflag;
+            limiterflagaux{1}='on';
+            limiterflagaux{4}='wf';
+            limiterflagaux{7}=0.33333;
+            %======================================================================
+            Sleftaux = getsatonedge(elemeval,vertices,verticescoord,...
+                taylorterms,Sw,limiterflagaux,faceorder,constraint,flagknownvert,...
+                satonvertices,mlpbyelem,centelem(leftelem,1:2));
             if Sleft>1 || Sleft<0
                 Sleft=Sleftaux;
                 
@@ -210,9 +210,9 @@ for i = 1:length(pointinedg)
     Sright = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
         limiterflag,faceorder,constraint,flagknownvert,satonvertices,...
         mlpbyelem,centelem(elemeval,1:2));
-     Srightaux = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
+    Srightaux = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
         limiterflagaux,faceorder,constraint,flagknownvert,satonvertices,...
-        mlpbyelem,centelem(elemeval,1:2));      
+        mlpbyelem,centelem(elemeval,1:2));
     %Get an accurated value:
     if Sleft>1 || Sleft<0
         %Sleft=Sw(leftelem);
@@ -221,7 +221,7 @@ for i = 1:length(pointinedg)
     
     if Sright>1 || Sright<0
         %Sright=Sw(rightelem);
-         Sright = Srightaux;
+        Sright = Srightaux;
     end
     
     Sleft = Sleft*(abs(Sleft) > tol);
@@ -232,33 +232,33 @@ for i = 1:length(pointinedg)
     Sleft = Sleft*(Sleft >= 0);
     Sright = Sright*(Sright >= 0);
     
-%     if i==1
-%         if Sright<Sleft
-%             
-%             Sleft=Sw(leftelem);
-%             %Sleft = Sleftaux;
-%             if Sright<Sleft
-%                 Sright=Sw(rightelem);
-%                 %Sright = Srightaux;
-%             end
-%             
-%         else
-%             Sleft=Sleft;
-%         end
-%     else
-%         if Sleft<Sright
-%             Sright=Sw(rightelem);
-%             %Sright = Srightaux;
-%             
-%             if Sleft<Sright
-%                 
-%                 Sleft=Sw(leftelem);    
-%                 %Sleft = Sleftaux;
-%             end
-%         else
-%             Sright=Sright;
-%         end
-%     end
+    %     if i==1
+    %         if Sright<Sleft
+    %
+    %             Sleft=Sw(leftelem);
+    %             %Sleft = Sleftaux;
+    %             if Sright<Sleft
+    %                 Sright=Sw(rightelem);
+    %                 %Sright = Srightaux;
+    %             end
+    %
+    %         else
+    %             Sleft=Sleft;
+    %         end
+    %     else
+    %         if Sleft<Sright
+    %             Sright=Sw(rightelem);
+    %             %Sright = Srightaux;
+    %
+    %             if Sleft<Sright
+    %
+    %                 Sleft=Sw(leftelem);
+    %                 %Sleft = Sleftaux;
+    %             end
+    %         else
+    %             Sright=Sright;
+    %         end
+    %     end
     
     
     %Calculate the derivative dfw/dSw:
@@ -376,7 +376,7 @@ for i = 1:length(pointinedg)
     %Choise according second derivative sign (see Serma, 2009)
     
     %It use Upwind (Roe)
-   if signder_left*signder_right >= 0 && sign2der_left*sign2der_right >= 0
+    if signder_left*signder_right >= 0 && sign2der_left*sign2der_right >= 0
         %Verify the sign of the characteristic velocity:
         %It uses the saturation on the left
         if charvel_rh > 0 || charvel_rh==0
@@ -406,7 +406,7 @@ for i = 1:length(pointinedg)
         end  %End of IF (Upwind flux)
         
         %It uses the LLF to define the saturation through edge.
- else
+    else
         %Get the max value of characteristic velocity
         %Define a range for the saturtion
         
@@ -434,7 +434,7 @@ for i = 1:length(pointinedg)
         %      entrvar = getineqentropy(0.5*(Sleft + Sright),5,2,(1 - entropycond)*paramk);
         %Calculate the entropy flux (right value)
         %      entrflux = entrvar*dotvn;
-   end  %End of IF (type of flux)
+    end  %End of IF (type of flux)
     
     
     %Obtain the contribution of interface over element to LEFT
@@ -444,12 +444,12 @@ for i = 1:length(pointinedg)
     
     
     
-%     if i==1
-%         satmedio(i,1:2)=[Sright Sleft];
-%     else
-%         satmedio(i,1:2)=[Sleft Sright];
-%     end
-%     axesxx(i,1)=i;
+    %     if i==1
+    %         satmedio(i,1:2)=[Sright Sleft];
+    %     else
+    %         satmedio(i,1:2)=[Sleft Sright];
+    %     end
+    %     axesxx(i,1)=i;
     %Evaluate ENTROPY condition (flux terms)
     %Obtain the contribution of interface over element to LEFT
     %    entrineqterm(leftelem) = ...
