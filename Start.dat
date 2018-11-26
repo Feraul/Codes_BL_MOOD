@@ -612,7 +612,7 @@ n
 //The Courant number will be used as a stability parameter of the 
 //hyperbolic saturation equation. Write below the Courant number:
 
-0.5
+0.6
 
 //--------------------------------------------------------------------
 //Unity for Time (only for Two-Phase Simulation): 

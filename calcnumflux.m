@@ -444,12 +444,12 @@ for i = 1:length(pointinedg)
     
     
     
-    if i==1
-        satmedio(i,1:2)=[Sright Sleft];
-    else
-        satmedio(i,1:2)=[Sleft Sright];
-    end
-    axesxx(i,1)=i;
+%     if i==1
+%         satmedio(i,1:2)=[Sright Sleft];
+%     else
+%         satmedio(i,1:2)=[Sleft Sright];
+%     end
+%     axesxx(i,1)=i;
     %Evaluate ENTROPY condition (flux terms)
     %Obtain the contribution of interface over element to LEFT
     %    entrineqterm(leftelem) = ...
