@@ -377,7 +377,7 @@ for i = 1:length(pointinedg)
     %Choise according second derivative sign (see Serma, 2009)
     
     %It use Upwind (Roe)
-    if signder_left*signder_right >= 0 %&& sign2der_left*sign2der_right >= 0
+    if signder_left*signder_right >= 0 && sign2der_left*sign2der_right >= 0
         %Verify the sign of the characteristic velocity:
         %It uses the saturation on the left
         if charvel_rh > 0 || charvel_rh==0
@@ -415,9 +415,11 @@ for i = 1:length(pointinedg)
         
         %Get the analitical derivative:
         [dfwdS,dgamadS] = calcdfunctiondS(0,0,Sranglr,1);
+
         
         %Finally, get the maximun value of saturation:
         alfamax = max(abs(dfwdS*dotvn + dgamadS*dotvg));
+        
         %Denine the numerical flux
         Fleft = fw(1)*dotvn + gama(1)*dotvg;
         Fright = fw(3)*dotvn + gama(3)*dotvg;
