@@ -105,7 +105,7 @@ satonboundedges = satonedges(1:bedgesize);
 
 %--------------------------------------------------------------------------
 %MOOD loop. It is used also to treatment of well.
-
+contador=0;
 while (dmp ~= 0 || convwell == 0)
     %If it get the producer well time step loop, the FOR of elements below 
     %swepts only the elelments in the producer wells.
@@ -571,6 +571,7 @@ while (dmp ~= 0 || convwell == 0)
 %         pointbndedg = prodwellbedg;
 %         pointinedg = prodwellinedg;
     end  %End of IF
+    contador=contador+1
 end  %End of WHILE (MOOD or well treatment)
 
 %Gives mensage to user

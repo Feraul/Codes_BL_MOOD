@@ -159,7 +159,7 @@ for i = 1:length(pointinedg)
     vertices = inedge(inedg,1:2);
     %Get the coordinate for the vertices:
     verticescoord = coord(vertices,:);
-    norma=norm(coord(inedge(inedg,1),:)-coord(inedge(inedg,2),:));
+    norm=coord(inedg,1)
     %Define left and right elements
     leftelem = inedge(inedg,3);
     rightelem = inedge(inedg,4);
@@ -377,7 +377,7 @@ for i = 1:length(pointinedg)
     %Choise according second derivative sign (see Serma, 2009)
     
     %It use Upwind (Roe)
-    if signder_left*signder_right >= 0 %&& sign2der_left*sign2der_right >= 0
+    if signder_left*signder_right >= 0 && sign2der_left*sign2der_right >= 0
         %Verify the sign of the characteristic velocity:
         %It uses the saturation on the left
         if charvel_rh > 0 || charvel_rh==0
