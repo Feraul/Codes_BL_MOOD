@@ -24,12 +24,12 @@
 function [advecterm,entrineqterm,earlysw] = calcnumflux(Sw,Fg,flowrate,...
     taylorterms,limiterflag,flagknownvert,satonvertices,flagknownedge,...
     satonboundedges,pointbndedg,pointinedg,orderbedgdist,orderinedgdist,...
-    constraint,mlplimiter,earlysw)
+    constraint,mlplimiter,earlysw,countinter)
 %Define global parameters:
 global coord elem bedge inedge normals dens numcase centelem order courant;
 
 %Initialize a tolerance. It is a computational zero
-tol = 1e-12;
+tol = 1e-9;
 %Initialize "advecterm" and "entrineqterm"
 advecterm = zeros(size(elem,1),1);
 entrineqterm = advecterm;
@@ -95,26 +95,21 @@ if any(pointbndedg)
             %Get the saturation value recovered
             Sleft = getsatonedge(elemeval,vertices,verticescoord,...
                 taylorterms,Sw,limiterflag,faceorder,constraint,flagknownvert,...
-                satonvertices,mlpbyelem,centelem(leftelem,1:2));
+                satonvertices,mlpbyelem,centelem(leftelem,1:2),countinter);
             
-            %======================================================================
-            limiterflagaux=limiterflag;
-            limiterflagaux{1}='on';
-            limiterflagaux{4}='wf';
-            limiterflagaux{7}=0.33333;
-            %======================================================================
-            Sleftaux = getsatonedge(elemeval,vertices,verticescoord,...
-                taylorterms,Sw,limiterflagaux,faceorder,constraint,flagknownvert,...
-                satonvertices,mlpbyelem,centelem(leftelem,1:2));
             if Sleft>1 || Sleft<0
-                Sleft=Sleftaux;
+                Sleft=Sw(leftelem);
+                %Sleft=Sleftaux;
                 
             end
-            Sleft = Sleft*(Sleft >= 0);
-            
+%==========================================================================
+            if Sleft>Sw(leftelem)
+                Sleft=Sw(leftelem);
+            end
+%==========================================================================
         end  %End of IF
-        
-        Sleft = Sleft*(Sleft >= 0);
+        Sleft = Sleft*(Sleft >=0);
+        Sleft = Sleft*(abs(Sleft) > tol);
         %Fill "earlysw"
         earlysw(ibedg) = Sleft;
         
@@ -154,12 +149,13 @@ end  %End of IF (Does evaluate the boundary edges?)
 for i = 1:length(pointinedg)
     %Initialize some parameters:
     inedg = pointinedg(i);
-    
+    %---------------------------------------
+    %Define the normal velocity in each face
+    dotvn = flowrate(bedgesize + inedg);
     %Define "vertices"
     vertices = inedge(inedg,1:2);
     %Get the coordinate for the vertices:
     verticescoord = coord(vertices,:);
-    norma=norm(coord(inedge(inedg,1),:)-coord(inedge(inedg,2),:));
     %Define left and right elements
     leftelem = inedge(inedg,3);
     rightelem = inedge(inedg,4);
@@ -180,7 +176,6 @@ for i = 1:length(pointinedg)
     else
         dotvg = 0;
     end  %End of IF
-    
     %----------------------------------------------------------------------
     
     %Get the saturation value recovered on each quadrature point ("on_q")
@@ -190,16 +185,8 @@ for i = 1:length(pointinedg)
     %Left Contribution:
     Sleft = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
         limiterflag,faceorder,constraint,flagknownvert,satonvertices,...
-        mlpbyelem,centelem(elemeval,1:2));
-    %======================================================================
-    limiterflagaux=limiterflag;
-    limiterflagaux{1}='on';
-    limiterflagaux{4}='wf';
-    limiterflagaux{7}=0.33333;
-    %======================================================================
-    Sleftaux = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
-        limiterflagaux,faceorder,constraint,flagknownvert,satonvertices,...
-        mlpbyelem,centelem(elemeval,1:2));
+        mlpbyelem,centelem(elemeval,1:2),countinter);
+    
     %Right Contribution:
     %Define the order for this edge.
     faceorder = orderinedgdist(i,2);
@@ -210,67 +197,25 @@ for i = 1:length(pointinedg)
     %Get the saturation value recovered on each quadrature point ("on_q")
     Sright = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
         limiterflag,faceorder,constraint,flagknownvert,satonvertices,...
-        mlpbyelem,centelem(elemeval,1:2));
-    Srightaux = getsatonedge(elemeval,vertices,verticescoord,taylorterms,Sw,...
-        limiterflagaux,faceorder,constraint,flagknownvert,satonvertices,...
-        mlpbyelem,centelem(elemeval,1:2));
-    %Get an accurated value:
-    if Sleft>1 || Sleft<0
-        %Sleft=Sw(leftelem);
-        Sleft = Sleftaux;
-    end
-    
-    if Sright>1 || Sright<0
-        %Sright=Sw(rightelem);
-        Sright = Srightaux;
-    end
-    
-    Sleft = Sleft*(abs(Sleft) > tol);
-    Sright = Sright*(abs(Sright) > tol);
-    
+        mlpbyelem,centelem(elemeval,1:2),countinter);
     %PAD
-    
-    Sleft = Sleft*(Sleft >= 0);
-    Sright = Sright*(Sright >= 0);
-    
-    %     if i==1
-    %         if Sright<Sleft
-    %
-    %             Sleft=Sw(leftelem);
-    %             %Sleft = Sleftaux;
-    %             if Sright<Sleft
-    %                 Sright=Sw(rightelem);
-    %                 %Sright = Srightaux;
-    %             end
-    %
-    %         else
-    %             Sleft=Sleft;
-    %         end
-    %     else
-    %         if Sleft<Sright
-    %             Sright=Sw(rightelem);
-    %             %Sright = Srightaux;
-    %
-    %             if Sleft<Sright
-    %
-    %                 Sleft=Sw(leftelem);
-    %                 %Sleft = Sleftaux;
-    %             end
-    %         else
-    %             Sright=Sright;
-    %         end
-    %     end
-    
-    
-    %Calculate the derivative dfw/dSw:
-    %Analytical:
-    [dfwdS_analeft,dgamadS_analeft] = calcdfunctiondS(0,0,Sleft,1);
-    [dfwdS_analright,dgamadS_analright] = calcdfunctiondS(0,0,Sright,1);
-    
-    %Get accuracy (second derivative):
-    dfwdS_analeft = dfwdS_analeft*(abs(dfwdS_analeft) > tol);
-    dfwdS_analright = dfwdS_analright*(abs(dfwdS_analright) > tol);
-    
+%Get an accurated value:
+if Sleft>1 || Sleft<0
+    Sleft=Sw(leftelem);
+end
+
+if Sright>1 ||Sright<0
+    Sright=Sw(rightelem);
+end
+    %======================================================================
+    % garantir o extremo
+    %if countinter>=1
+    [Sleft,Sright]=garantirextremum(Sleft,Sright,Sw,leftelem,...
+                         rightelem,dotvn,i,vertices,verticescoord,taylorterms,...
+                         limiterflag,constraint,flagknownvert,satonvertices,countinter,mlplimiter);
+    %end
+    %======================================================================
+    %%
     %Get the analytical for a point between "Sleft" and "Sright"
     Smid = (Sleft + Sright)/2;
     %Smid = ((1-courant)*Sleft + courant*Sright);
@@ -281,39 +226,27 @@ for i = 1:length(pointinedg)
     % fw(1) ---> fluxo fracional no elemento fw(Sleft)
     % fw(2) ---> fluxo fracional no elemento fw(Smid)
     % fw(3) ---> fluxo fracional no elemento fw(Sright)
-    
     %Calculate the Rankine-Hugoniot ratio:
     % veja o tese Darlan pag. 165
     [dfwdS_rh,dgamadS_rh] = ...
         calcdfunctiondS([fw(1) fw(3)],[gama(1) gama(3)],[Sleft Sright],0);
-    %%
-    %There saturation difference bigger than zero
-    %     if (Sleft - Smid) ~= 0
-    %         dfdSlef = (fw(2) - fw(3))/( Smid-Sleft);
-    %
-    %         %The saturation difference is zeros
-    %     else
-    %         dfdSlef = 0;
-    %
-    %     end  %End of IF
-    %     if (Smid-Sright) ~= 0
-    %         dfdSrel= (fw(2) - fw(1))/(Smid-Sright);
-    %
-    %         %The saturation difference is zeros
-    %     else
-    %         dfdSrel = 0;
-    %
-    %     end  %End of IF
-    %               if ( dfdSrel< dfwdS_rh || dfdSrel== dfwdS_rh)  && (dfwdS_rh< dfdSlef|| dfwdS_rh==dfdSlef )
-    %              else
-    %                  i
-    %      %            disp('Não satisfaz condição de Rankine Hugoniot')
-    %                  pause
-    %              end
     
     %%
     %Get accuracy (RH ratio):
     dfwdS_rh = dfwdS_rh*(abs(dfwdS_rh) > tol);
+%     if min(dfwdS_rh)<0
+%         
+%         pause
+%         
+%     end
+    %Calculate the derivative dfw/dSw:
+    %Analytical:
+    [dfwdS_analeft,dgamadS_analeft] = calcdfunctiondS(0,0,Sleft,1);
+    [dfwdS_analright,dgamadS_analright] = calcdfunctiondS(0,0,Sright,1);
+    
+    %Get accuracy (second derivative):
+    dfwdS_analeft = dfwdS_analeft*(abs(dfwdS_analeft) > tol);
+    dfwdS_analright = dfwdS_analright*(abs(dfwdS_analright) > tol);
     
     %Calculate the second derivative d2fw/dSw2:
     [d2fwdS2_discleft,d2gamadS2_discleft] = calcder2dS(0,0,Sleft,1);
@@ -323,10 +256,6 @@ for i = 1:length(pointinedg)
     d2fwdS2_discright = d2fwdS2_discright*(abs(d2fwdS2_discright) > tol);
     d2gamadS2_discleft = d2gamadS2_discleft*(abs(d2gamadS2_discleft) > tol);
     d2gamadS2_discright = d2gamadS2_discright*(abs(d2gamadS2_discright) > tol);
-    
-    %---------------------------------------
-    %Define the normal velocity in each face
-    dotvn = flowrate(bedgesize + inedg);
     
     %Get accuracy:
     dotvn = dotvn*(abs(dotvn) > tol);
@@ -375,11 +304,22 @@ for i = 1:length(pointinedg)
     
     %----------------------------------------------------------------------
     %Choise according second derivative sign (see Serma, 2009)
+    %Get the max value of characteristic velocity
+    %Define a range for the saturtion
     
+    Sranglr = [Sleft Sright];
+    
+    %Get the analitical derivative:
+    [dfwdS,dgamadS] = calcdfunctiondS(0,0,Sranglr,1);
+    %SL=min([dfwdS(1,1)*dotvn,dfwdS_rh*dotvn,0]);
+    %SR=max([dfwdS(2,1)*dotvn,dfwdS_rh*dotvn,0]);
+    %SL=min([dfwdS(1,1)*dotvn,0]);
+    %SR=max([dfwdS(2,1)*dotvn,0]);
+    %if SL<1e-10 && SR<1e-10
     %It use Upwind (Roe)
     if signder_left*signder_right >= 0 && sign2der_left*sign2der_right >= 0
-        %Verify the sign of the characteristic velocity:
-        %It uses the saturation on the left
+        %         %Verify the sign of the characteristic velocity:
+        %         %It uses the saturation on the left
         if charvel_rh > 0 || charvel_rh==0
             %Calculate the numerical flux through interface
             numflux = fw(1)*dotvn + gama(1)*dotvg;
@@ -408,25 +348,19 @@ for i = 1:length(pointinedg)
         
         %It uses the LLF to define the saturation through edge.
     else
-        %Get the max value of characteristic velocity
-        %Define a range for the saturtion
         
-        Sranglr = [Sleft Sright];
-        
-        %Get the analitical derivative:
-        [dfwdS,dgamadS] = calcdfunctiondS(0,0,Sranglr,1);
-
-        
-        %Finally, get the maximun value of saturation:
         alfamax = max(abs(dfwdS*dotvn + dgamadS*dotvg));
-        
         %Denine the numerical flux
         Fleft = fw(1)*dotvn + gama(1)*dotvg;
         Fright = fw(3)*dotvn + gama(3)*dotvg;
         %Define Local Lax-Friedrichs Flux
         
         LLFlux = 0.5*((Fleft + Fright) - alfamax*(Sright - Sleft));
-        
+       
+        % alfamax = max([abs(dfwdS*dotvn + dgamadS*dotvg);abs(charvel_rh)]);
+        % LLFlux = 0.5*((Fleft + Fright) - alfamax*(Sright - Sleft));
+        % LLFlux = (SR/(SR-SL))*Fleft - (SL/(SR-SL))*Fright + ((SR*SL)/(SR-SL))*(Sright - Sleft);
+      
         %Calculate the numerical flux through interface using LLF.
         numflux = LLFlux;
         
@@ -438,14 +372,12 @@ for i = 1:length(pointinedg)
         %Calculate the entropy flux (right value)
         %      entrflux = entrvar*dotvn;
     end  %End of IF (type of flux)
-    
+%     
     
     %Obtain the contribution of interface over element to LEFT
     advecterm(leftelem) = advecterm(leftelem) + numflux;
     %Obtain the contribution of interface over element to RIGHT
     advecterm(rightelem) = advecterm(rightelem) - numflux;
-    
-    
     
     %     if i==1
     %         satmedio(i,1:2)=[Sright Sleft];
